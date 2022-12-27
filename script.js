@@ -18,7 +18,7 @@ function playRound(playerSelection, computerSelection){
         if (playerSelection === 'rock' && computerSelection === 'scissors' || playerSelection === 'scissors' && computerSelection === 'paper' || playerSelection === 'paper' && computerSelection === 'rock'){
             return `You won, ${playerSelection} beats ${computerSelection}!`;
         } else if (playerSelection === computerSelection){
-            return `Draw! Both players picked ${playerSelection}`;
+            return `Draw! Both players picked ${playerSelection}.`;
         } else {
             return `You lost, ${playerSelection} loses to ${computerSelection}!`;
         }
@@ -28,24 +28,52 @@ function playRound(playerSelection, computerSelection){
     
 }
 
-function game(){
-    let playerWins = 0;
-    let playerLosses = 0;
-    for (let i=0; i<5; i++){
-        let playerSelection = prompt('Input move');
-        let results = playRound(playerSelection, getComputerChoice());
-        if (results.includes('won')){
-            playerWins++;
-        } else if (results.includes('lost')){
-            playerLosses++;
-        }
-        console.log(results);
+function resetGame(){
+    playerWins = 0;
+    playerLosses = 0;
+    gameOver = false;
+    gameMessage.textContent = 'The game has been restarted! Click any button to begin!'
+}
+    
+function gameLogic(){
+    if (gameOver){
+        return
     }
+    let results = playRound(this.textContent,getComputerChoice());
+    if (results.includes('won')){
+        playerWins += 1;
+    } else if (results.includes('lost')){
+        playerLosses += 1;
+    }
+    if (playerWins === 5 || playerLosses === 5){
+        gameOver = true;
+        winCondition(playerWins,playerLosses);
+    } else {
+        gameMessage.textContent = `${results} You currently have ${playerWins} wins and ${playerLosses} losses.`
+    }
+}
+
+function winCondition(playerWins, playerLosses){
     if (playerWins > playerLosses){
-        console.log(`You won the game! You had ${playerWins} wins and ${playerLosses} losses.`);
+        gameMessage.textContent = `You won the game! You had ${playerWins} wins and ${playerLosses} losses.`;
     } else if (playerWins < playerLosses){
-        console.log(`You lost the game! You had ${playerWins} wins and ${playerLosses} losses.`);
+        gameMessage.textContent = `You lost the game! You had ${playerWins} wins and ${playerLosses} losses.`;
     } else {
         console.log(`The game was a draw. You had ${playerWins} wins and ${playerLosses} losses.`);
     }
 }
+
+// rockButton = document.querySelector('.rock')
+
+
+let playerWins = 0;
+let playerLosses = 0;
+let gameOver = false;
+
+gameButtons = document.querySelectorAll('.game-button');
+gameMessage = document.querySelector('.game-message');
+playAgainButton = document.querySelector('.play-again')
+gameButtons.forEach((button) => {
+    button.addEventListener('click', gameLogic);
+})
+playAgainButton.addEventListener('click',resetGame);

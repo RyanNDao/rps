@@ -1,0 +1,13 @@
+.buttons{
+    display: flex;
+    gap: 10px;
+}
+
+.game{
+    display: flex;
+    flex-direction: column;
+}
+
+.play-again{
+    width: 250px;
+}
